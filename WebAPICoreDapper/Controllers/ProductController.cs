@@ -34,7 +34,6 @@ namespace WebAPICoreDapper.Controllers
                 return result;
             }
         }
-
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
         public async Task<Product> Get(int id)
@@ -49,7 +48,6 @@ namespace WebAPICoreDapper.Controllers
                 return result.Single();
             }
         }
-
         // POST api/<ProductController>
         [HttpPost]
         public async Task<int> Post([FromBody] Product product)
@@ -74,7 +72,6 @@ namespace WebAPICoreDapper.Controllers
             return newId;
 
         }
-
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
         public async Task Put(int id, [FromBody] Product product)
@@ -95,7 +92,6 @@ namespace WebAPICoreDapper.Controllers
                 await conn.ExecuteAsync("Update_product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
             }
         }
-
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
         public async Task Delete(int id)
