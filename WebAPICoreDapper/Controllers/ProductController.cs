@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPICoreDapper.Dtos;
+using WebAPICoreDapper.Filter;
 using WebAPICoreDapper.Models;
 
 
@@ -72,10 +73,10 @@ namespace WebAPICoreDapper.Controllers
             }
         }
         // POST api/<ProductController>
+        [ModelValidation]
         [HttpPost]
-        public async Task<int> Post([FromBody] Product product)
+        public async Task<IActionResult> Post([FromBody] Product product)
         {
-            var newId = 0;
             using(var conn = new SqlConnection(_connectionString))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
@@ -90,14 +91,15 @@ namespace WebAPICoreDapper.Controllers
                 paramaters.Add("@createdAt", product.CreatedAt);
                 paramaters.Add("@id", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
                 await conn.ExecuteAsync("Create_New_Product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
-                newId = paramaters.Get<int>("@id");
+                var newId = paramaters.Get<int>("@id");
+                return Ok(newId);
             }
-            return newId;
 
         }
         // PUT api/<ProductController>/5
+        [ModelValidation]
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Product product)
+        public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
             using(var conn = new SqlConnection(_connectionString))
             {
@@ -113,6 +115,7 @@ namespace WebAPICoreDapper.Controllers
                 paramaters.Add("@viewCount", product.ViewCount);
                 paramaters.Add("@createdAt", product.CreatedAt);
                 await conn.ExecuteAsync("Update_product", paramaters, null, null, System.Data.CommandType.StoredProcedure);
+                return Ok();
             }
         }
         // DELETE api/<ProductController>/5
